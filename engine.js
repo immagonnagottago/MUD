@@ -29,6 +29,7 @@ function showRoom(roomId) {
   print(room.name);
   print(room.desc);
   showExits(room);
+  if (typeof renderMap === "function") renderMap(currentRoom);
 }
 
 const DIR_FULL = { n: "NORTH", s: "SOUTH", e: "EAST", w: "WEST", u: "UP", d: "DOWN" };
