@@ -1,7 +1,5 @@
 // engine.js
-
 const worldOutput = document.getElementById("world-output");
-
 function print(text) {
   const line = document.createElement("div");
   line.innerHTML = text;
@@ -33,12 +31,15 @@ function showRoom(roomId) {
   showExits(room);
 }
 
+const DIR_FULL = { n: "NORTH", s: "SOUTH", e: "EAST", w: "WEST", u: "UP", d: "DOWN" };
+
 function showExits(room) {
   const dirs = Object.keys(room.exits);
   if (dirs.length === 0) { print("There are no exits."); return; }
   print("");
   for (const dir of dirs) {
-    print(dir.toUpperCase() + " -- " + room.exits[dir].desc);
+    const label = DIR_FULL[dir] || dir.toUpperCase();
+    print(label + " -- " + room.exits[dir].desc);
   }
 }
 
@@ -54,17 +55,41 @@ function move(dir) {
   showRoom(currentRoom);
 }
 
+// ── EXAMINE ──
+function examine(target) {
+  const room = ROOMS[currentRoom];
+
+  // Check room nodes first
+  if (room.nodes) {
+    for (const nodeId of room.nodes) {
+      const node = NODES[nodeId];
+      if (node && node.name.toLowerCase() === target) {
+        print("");
+        print(node.desc);
+        return;
+      }
+    }
+  }
+
+  // Check billboard
+  if (target === "billboard") {
+    if (!room.billboard) { print("There is no billboard here."); return; }
+    print("");
+    print(BILLBOARD_EXAMINE);
+    return;
+  }
+
+  print("You don't see that here.");
+}
+
 // ── COMMAND HANDLER ──
 function handleCommand(raw) {
   const cmd = raw.trim().toLowerCase();
   if (!cmd) return;
-
   print("> " + raw);
 
   if (DIR_ALIASES[cmd] !== undefined) { move(DIR_ALIASES[cmd]); return; }
-
   if (cmd === "look" || cmd === "l") { showRoom(currentRoom); return; }
-
   if (cmd === "exits") { showExits(ROOMS[currentRoom]); return; }
 
   if (cmd === "read billboard") {
@@ -72,6 +97,12 @@ function handleCommand(raw) {
     if (!room.billboard) { print("There is no billboard here."); return; }
     print("");
     print(BILLBOARD_TEXT);
+    return;
+  }
+
+  if (cmd.startsWith("examine ") || cmd.startsWith("ex ")) {
+    const target = cmd.replace(/^(examine|ex)\s+/, "").trim();
+    examine(target);
     return;
   }
 
