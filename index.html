@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The OASIS</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: #000;
+    color: #fff;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow: hidden;
+  }
+
+  #layout {
+    display: flex;
+    height: 100vh;
+  }
+
+  #world {
+    flex: 7;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #333;
+  }
+
+  #world-output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+  }
+
+  #world-inputbar {
+    display: flex;
+    padding: 6px 8px;
+    border-top: 1px solid #333;
+  }
+
+  #world-input {
+    flex: 1;
+    background: #000;
+    color: #fff;
+    border: none;
+    outline: none;
+    font-family: monospace;
+    font-size: 14px;
+    caret-color: #fff;
+  }
+
+  #chat {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #chat-output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+  }
+
+  #chat-inputbar {
+    display: flex;
+    padding: 6px 8px;
+    border-top: 1px solid #333;
+  }
+
+  #chat-input {
+    flex: 1;
+    background: #000;
+    color: #fff;
+    border: none;
+    outline: none;
+    font-family: monospace;
+    font-size: 14px;
+    caret-color: #fff;
+  }
+
+  .n-object  { color: #c8a850; }
+  .n-person  { color: #7ecac3; }
+  .n-place   { color: #80b878; }
+  .n-special { color: #c86878; }
+
+</style>
+</head>
+<body>
+
+<div id="layout">
+
+  <div id="world">
+    <div id="world-output"></div>
+    <div id="world-inputbar">
+      <input type="text" id="world-input"
+        autocomplete="off" autocorrect="off" spellcheck="false" />
+    </div>
+  </div>
+
+  <div id="chat">
+    <div id="chat-output"></div>
+    <div id="chat-inputbar">
+      <input type="text" id="chat-input"
+        autocomplete="off" autocorrect="off" spellcheck="false" />
+    </div>
+  </div>
+
+</div>
+
+<script src="player.js"></script>
+<script src="world.js"></script>
+<script src="engine.js"></script>
+
+<script>
+  const worldInput = document.getElementById("world-input");
+  const chatInput  = document.getElementById("chat-input");
+
+  document.getElementById("world").addEventListener("click", () => worldInput.focus());
+  document.getElementById("chat").addEventListener("click", () => chatInput.focus());
+
+  worldInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      const val = worldInput.value.trim();
+      worldInput.value = "";
+      if (val && typeof handleCommand === "function") handleCommand(val);
+    }
+  });
+
+  chatInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      const val = chatInput.value.trim();
+      chatInput.value = "";
+      if (val && typeof handleChat === "function") handleChat(val);
+    }
+  });
+
+  worldInput.focus();
+</script>
+
+</body>
+</html>
