@@ -11,5 +11,5 @@ world.js   — Rooms, items, NPCs, world data
 
 player.js  — Player state, inventory, saves
 
-Status
+Status:
 Under construction.
