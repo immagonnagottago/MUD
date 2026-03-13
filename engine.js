@@ -1,3 +1,10 @@
 // engine.js
-// Command parser and game logic.
-// Do not edit until index.html shell is approved.
+
+const worldOutput = document.getElementById("world-output");
+
+function print(text) {
+  const line = document.createElement("div");
+  line.innerHTML = text;
+  worldOutput.appendChild(line);
+  worldOutput.scrollTop = worldOutput.scrollHeight;
+}
